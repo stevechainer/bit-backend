@@ -41,7 +41,7 @@ router.post("/social", async (req, res) => {
     const { address, isTwitter, telegramId, discordId } = req.body;
 
     let telegramInvite = "";
-    let = "";
+    let discordInvite = "";
 
     // Validate telegramId
     if (
@@ -76,7 +76,7 @@ router.post("/social", async (req, res) => {
 
     // Send invite code.
     let data = {
-      twitterUrl: "null",
+      twitterUrl: isTwitter ? "https://init.capital/x" : "",
       telegramUrl: telegramInvite,
       discordUrl: discordInvite,
     };
@@ -95,9 +95,7 @@ router.get("/points", async (req, res) => {
   try {
     const ptsMap = await userModel.getAllPts();
 
-    console.log("=======================");
     // Convert Map to plain JavaScript object
-
     res.status(200).json(ptsMap);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
