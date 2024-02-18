@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const getTelegramInviteCode = async (telegramUserId) => {
+const createTelegramInviteCode = async () => {
   try {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
     const channelUsername = process.env.TELEGRAM_CHANNEL_USERNAME;
@@ -21,8 +21,8 @@ const getTelegramInviteCode = async (telegramUserId) => {
 
     if (result.ok) {
       const inviteLink = result.result;
-      const inviteCode = inviteLink.split("/").pop();
-      return inviteCode;
+      // const inviteCode = inviteLink.split("/").pop();
+      return inviteLink;
     } else {
       console.error("Error creating invite link:", result.description);
       return null;
@@ -33,4 +33,4 @@ const getTelegramInviteCode = async (telegramUserId) => {
   }
 };
 
-module.exports = { getTelegramInviteCode };
+module.exports = { createTelegramInviteCode };

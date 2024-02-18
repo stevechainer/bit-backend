@@ -2,10 +2,9 @@ require("dotenv").config();
 
 const createDiscordInvite = async () => {
   try {
-    const channelId = "1207984358997229651";
-    const botToken = process.env.DISCORD_BOT_TOKEN;
+    const channelId = "1207984358997229651"; // Channel ID
+    const botToken = process.env.DISCORD_BOT_TOKEN; // Bot token
 
-    console.log(`Bot ${botToken}`);
     const apiUrl = `https://discord.com/api/v10/channels/${channelId}/invites`;
     const response = await fetch(apiUrl, {
       method: "POST",
