@@ -34,7 +34,31 @@ router.get("/", async (req, res) => {
   }
 });
 
-//
+// Get Address's pts
+router.get("/:id", async (req, res) => {
+  try {
+    const userAddress = req.params.id;
+
+    // Find the user by address
+    const user = await userModel.findOne({ address: userAddress });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Assuming you want to include the user's info and the formatted time in the response
+    const data = {
+      point: user.totalPts,
+    };
+
+    res.status(200).json(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Get Social Info and set Points
 router.post("/social", async (req, res) => {
   console.log("/social");
   try {
