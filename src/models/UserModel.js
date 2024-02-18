@@ -32,11 +32,17 @@ UserModel.getAllPts = async function () {
     const users = await this.find(
       {},
       "address totalPts ptsPerDay referralPts bonusPts -_id"
-    );
+    ).sort({ totalPts: -1 });
 
-    console.log(users);
+    // Add a 'ranking' field to each user based on the order of totalPts
+    const rankedUsers = users.map((user, index) => ({
+      ...user._doc,
+      rank: index + 1,
+    }));
 
-    return users;
+    console.log(rankedUsers);
+
+    return rankedUsers;
   } catch (error) {
     throw error;
   }
