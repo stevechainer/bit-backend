@@ -1,11 +1,26 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  address: String,
-  telegram_id: String,
-  telegram_invite: String,
-  discord_id: String,
-  discord_invite: String,
+  address: {
+    type: String,
+    required: true,
+  },
+  telegram_id: {
+    type: String,
+    default: "", // Set default value to an empty string
+  },
+  telegram_invite: {
+    type: String,
+    default: "", // Set default value to an empty string
+  },
+  discord_id: {
+    type: String,
+    default: "", // Set default value to an empty string
+  },
+  discord_invite: {
+    type: String,
+    default: "", // Set default value to an empty string
+  },
   totalPts: {
     type: Number,
     default: 0,
