@@ -1,8 +1,34 @@
 require("dotenv").config();
+const { Telegraf } = require("telegraf");
 
-const createTelegramInviteCode = async () => {
+const botToken = process.env.TELEGRAM_BOT_TOKEN;
+const bot = new Telegraf(botToken);
+
+const checkTLoginState = async (userId, channelId) => {
   try {
-    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const channelUsername = process.env.TELEGRAM_CHANNEL_USERNAME;
+
+    const chatMemberIds = await bot.telegram
+      .getChatAdministrators(`@${channelUsername}`)
+      .then((admins) => admins.map((admin) => admin.user.id));
+
+    if (chatMemberIds.includes(userId)) {
+      // console.log("User is in the channel");
+      return true;
+    } else {
+      // console.log("User is not in the channel");
+      return false;
+    }
+  } catch (error) {
+    console.error("Error checking login state:", error);
+    throw error;
+    return false;
+  }
+};
+
+// Create Telegram Invite Code.
+const createTelegramInvite = async () => {
+  try {
     const channelUsername = process.env.TELEGRAM_CHANNEL_USERNAME;
 
     const apiUrl = `https://api.telegram.org/bot${botToken}/exportChatInviteLink`;
@@ -33,4 +59,4 @@ const createTelegramInviteCode = async () => {
   }
 };
 
-module.exports = { createTelegramInviteCode };
+module.exports = { createTelegramInvite, checkTLoginState };

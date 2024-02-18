@@ -1,8 +1,27 @@
 const express = require("express");
 const router = express.Router();
 const userModel = require("../models/UserModel");
-const { createTelegramInviteCode } = require("../utils/telegram");
+const { createTelegramInvite, checkTLoginState } = require("../utils/telegram");
 const { createDiscordInvite } = require("../utils/discord");
+
+// checkLoginState
+const checkLoginState = async (userId, appType) => {
+  let loggined = false;
+  if (appType == process.env.TELEGRAM) {
+    loggined = await checkTLoginState(userId, process.env.TELEGRAM);
+
+    if (loggined) {
+      // add pts to users
+    }
+  }
+
+  if (appType == process.env.DISCORD) {
+    // loggined = await checkDLoginState(userId, process.env.TELEGRAM);
+    // if (loggined) {
+    //   // add pts to users
+    // }
+  }
+};
 
 // Define your routes here
 router.get("/", async (req, res) => {
@@ -31,7 +50,7 @@ router.post("/submit_get_invite", async (req, res) => {
       telegram_id.trim() !== ""
     ) {
       // Get Telegram invite code
-      telegram_invite = await createTelegramInviteCode();
+      telegram_invite = await createTelegramInvite();
     }
 
     // Validate discord_id
@@ -42,6 +61,9 @@ router.post("/submit_get_invite", async (req, res) => {
     ) {
       // Get Discord invite code
       discord_invite = await createDiscordInvite();
+
+      // Check login state.
+      checkLoginState(discord_id, process.env.TELEGRAM);
     }
 
     // Save user to MongoDB
