@@ -43,7 +43,8 @@ router.get("/:id", async (req, res) => {
     const user = await userModel.findOne({ address: userAddress });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.send({ point: "0" });
+      // return res.status(404).json({ error: "User not found" });
     }
 
     // Assuming you want to include the user's info and the formatted time in the response
