@@ -95,7 +95,7 @@ router.post("/submit_get_invite", async (req, res) => {
 });
 
 // Get all pts for users.
-router.get("/all_pts", async (req, res) => {
+router.get("/points", async (req, res) => {
   try {
     const ptsMap = await userModel.getAllPts();
 
