@@ -6,7 +6,18 @@ const userSchema = new mongoose.Schema({
   telegram_invite: String,
   discord_id: String,
   discord_invite: String,
-  pts: Number,
+  pts: {
+    type: Number,
+    default: 0,
+  },
+  refPts: {
+    type: Number,
+    default: 0,
+  },
+  bonusPts: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const UserModel = mongoose.model("User", userSchema);
@@ -14,8 +25,18 @@ const UserModel = mongoose.model("User", userSchema);
 // Function to get all pts values
 UserModel.getAllPts = async function () {
   try {
-    const users = await this.find({}, { _id: 0, user: 1, pts: 1 });
-    const ptsMap = new Map(users.map((user) => [user.user, user.pts]));
+    const users = await this.find(
+      {},
+      { _id: 0, user: 1, pts: 1, refPts: 1, bonusPts: 1 }
+    );
+
+    const ptsMap = new Map(
+      users.map((user) => [
+        user.user,
+        { pts: user.pts, refPts: user.refPts, bonusPts: user.bonusPts },
+      ])
+    );
+
     return ptsMap;
   } catch (error) {
     throw error;

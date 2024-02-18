@@ -39,7 +39,7 @@ router.post("/submit_get_invite", async (req, res) => {
   console.log("/submit_get_invite");
   try {
     const { user, telegram_id, discord_id, isX } = req.body;
-    const pts = 0;
+
     let telegram_invite = "";
     let discord_invite = "";
 
@@ -73,7 +73,6 @@ router.post("/submit_get_invite", async (req, res) => {
       telegram_invite,
       discord_id,
       discord_invite,
-      pts,
     });
 
     // Save user info.
@@ -102,6 +101,9 @@ router.get("/all_pts", async (req, res) => {
 
     // Convert Map to plain JavaScript object
     const ptsObject = Object.fromEntries(ptsMap);
+
+    console.log(ptsObject);
+
     res.status(200).json(ptsObject);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
