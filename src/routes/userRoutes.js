@@ -35,8 +35,8 @@ router.get("/", async (req, res) => {
 });
 
 //
-router.post("/submit_get_invite", async (req, res) => {
-  console.log("/submit_get_invite");
+router.post("/social", async (req, res) => {
+  console.log("/social");
   try {
     const { address, telegram_id, discord_id } = req.body;
 
