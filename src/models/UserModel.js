@@ -1,16 +1,20 @@
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
-  user: String,
+  address: String,
   telegram_id: String,
   telegram_invite: String,
   discord_id: String,
   discord_invite: String,
-  pts: {
+  totalPts: {
     type: Number,
     default: 0,
   },
-  refPts: {
+  ptsPerDay: {
+    type: Number,
+    default: 0,
+  },
+  referralPts: {
     type: Number,
     default: 0,
   },
@@ -27,17 +31,12 @@ UserModel.getAllPts = async function () {
   try {
     const users = await this.find(
       {},
-      { _id: 0, user: 1, pts: 1, refPts: 1, bonusPts: 1 }
+      "address totalPts ptsPerDay referralPts bonusPts -_id"
     );
 
-    const ptsMap = new Map(
-      users.map((user) => [
-        user.user,
-        { pts: user.pts, refPts: user.refPts, bonusPts: user.bonusPts },
-      ])
-    );
+    console.log(users);
 
-    return ptsMap;
+    return users;
   } catch (error) {
     throw error;
   }

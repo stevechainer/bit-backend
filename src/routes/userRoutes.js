@@ -38,7 +38,7 @@ router.get("/", async (req, res) => {
 router.post("/submit_get_invite", async (req, res) => {
   console.log("/submit_get_invite");
   try {
-    const { user, telegram_id, discord_id, isX } = req.body;
+    const { address, telegram_id, discord_id } = req.body;
 
     let telegram_invite = "";
     let discord_invite = "";
@@ -68,7 +68,7 @@ router.post("/submit_get_invite", async (req, res) => {
 
     // Save user to MongoDB
     const newUser = new userModel({
-      user,
+      address,
       telegram_id,
       telegram_invite,
       discord_id,
@@ -99,12 +99,10 @@ router.get("/all_pts", async (req, res) => {
   try {
     const ptsMap = await userModel.getAllPts();
 
+    console.log("=======================");
     // Convert Map to plain JavaScript object
-    const ptsObject = Object.fromEntries(ptsMap);
 
-    console.log(ptsObject);
-
-    res.status(200).json(ptsObject);
+    res.status(200).json(ptsMap);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
