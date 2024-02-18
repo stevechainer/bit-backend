@@ -42,8 +42,9 @@ router.post("/social", async (req, res) => {
 
     let telegramInvite = "";
     let discordInvite = "";
+    let twitterInvite = "";
 
-    // Validate telegramId
+    /* Telegram Invite Code */
     if (
       telegramId &&
       typeof telegramId === "string" &&
@@ -51,18 +52,26 @@ router.post("/social", async (req, res) => {
     ) {
       // Get Telegram invite code
       telegramInvite = await createTelegramInvite();
+
+      // Add pts to users.
+      await userModel.increaseByUserId(address, process.env.PTS_TELEGRAM);
     }
 
-    // Validate discord_id
+    /* Discord Invite Code */
     if (discordId && typeof discordId === "string" && discordId.trim() !== "") {
       // Get Discord invite code
       discordInvite = await createDiscordInvite();
 
-      // Check login state.
-      checkLoginState(discordId, process.env.TELEGRAM);
+      // Add pts to users.
+      await userModel.increaseByUserId(address, process.env.PTS_DISCORD);
     }
 
-    // Save user to MongoDB
+    /* TWITTER Invite Code */
+    if (isTwitter) {
+      twitterInvite = "https://init.capital/x";
+      await userModel.increaseByUserId(address, process.env.PTS_TWITTER);
+    }
+    /* Save Social Info */
     const newUser = new userModel({
       address,
       telegramId,
@@ -71,12 +80,11 @@ router.post("/social", async (req, res) => {
       discordInvite,
     });
 
-    // Save user info.
     await newUser.save();
 
     // Send invite code.
     let data = {
-      twitterUrl: isTwitter ? "https://init.capital/x" : "",
+      twitterUrl: isTwitter ? twitterInvite : "",
       telegramUrl: telegramInvite,
       discordUrl: discordInvite,
     };
@@ -99,22 +107,6 @@ router.get("/points", async (req, res) => {
     res.status(200).json(ptsMap);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// updateType =  increase / decrease
-router.post("/update_pts", async (req, res) => {
-  try {
-    const { user, pts, updateType } = req.body;
-
-    if (updateType == 0) {
-      return await userModel.increaseByUserId(user, pts);
-    } else {
-      return await userModel.decreaseByUserId(user, pts);
-    }
-  } catch (error) {
-    console.error("Error creating user:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
