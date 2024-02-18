@@ -64,26 +64,26 @@ UserModel.getAllPts = async function () {
 };
 
 // Get Pts by user id.
-UserModel.getPtsByUserId = async function (user) {
+UserModel.getPtsByUserId = async function (address) {
   try {
-    const data = await this.findOne({ user: user });
+    const data = await this.findOne({ address: address });
 
     if (!data) {
       throw new Error("User not found");
     }
 
-    return data.pts;
+    return data.totalPts;
   } catch (error) {
     throw error;
   }
 };
 
 // Function to increase pts by User ID
-UserModel.increaseByUserId = async function (user, pts) {
+UserModel.increaseByUserId = async function (address, totalPts) {
   try {
     await this.findOneAndUpdate(
-      { user: user },
-      { $inc: { pts: pts } },
+      { address: address },
+      { $inc: { totalPts: totalPts } },
       { new: true }
     );
   } catch (error) {
@@ -92,11 +92,11 @@ UserModel.increaseByUserId = async function (user, pts) {
 };
 
 // Function to decrease pts by User ID
-UserModel.decreaseByUserId = async function (user, pts) {
+UserModel.decreaseByUserId = async function (address, totalPts) {
   try {
     await this.findOneAndUpdate(
-      { user: user },
-      { $inc: { pts: -pts } },
+      { address: address },
+      { $inc: { totalPts: -totalPts } },
       { new: true }
     );
   } catch (error) {
