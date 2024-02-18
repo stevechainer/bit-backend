@@ -103,8 +103,18 @@ router.get("/points", async (req, res) => {
   try {
     const ptsMap = await userModel.getAllPts();
 
-    // Convert Map to plain JavaScript object
-    res.status(200).json(ptsMap);
+    /* Get the current UTC time */
+    const updateDate = new Date();
+
+    // Create an object with formattedTime and ptsMap
+    const resultObject = {
+      updateDate: updateDate,
+      points: ptsMap,
+    };
+
+    console.log(resultObject);
+
+    res.status(200).json(resultObject);
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
