@@ -26,7 +26,7 @@ const checkLoginState = async (userId, appType) => {
 // Define your routes here
 router.get("/", async (req, res) => {
   try {
-    const users = await UserModel.find();
+    const users = await userModel.find();
     res.json(users);
   } catch (error) {
     console.error("Error fetching users:", error.message);
@@ -38,41 +38,37 @@ router.get("/", async (req, res) => {
 router.post("/social", async (req, res) => {
   console.log("/social");
   try {
-    const { address, telegram_id, discord_id } = req.body;
+    const { address, isTwitter, telegramId, discordId } = req.body;
 
-    let telegram_invite = "";
-    let discord_invite = "";
+    let telegramInvite = "";
+    let = "";
 
-    // Validate telegram_id
+    // Validate telegramId
     if (
-      telegram_id &&
-      typeof telegram_id === "string" &&
-      telegram_id.trim() !== ""
+      telegramId &&
+      typeof telegramId === "string" &&
+      telegramId.trim() !== ""
     ) {
       // Get Telegram invite code
-      telegram_invite = await createTelegramInvite();
+      telegramInvite = await createTelegramInvite();
     }
 
     // Validate discord_id
-    if (
-      discord_id &&
-      typeof discord_id === "string" &&
-      discord_id.trim() !== ""
-    ) {
+    if (discordId && typeof discordId === "string" && discordId.trim() !== "") {
       // Get Discord invite code
-      discord_invite = await createDiscordInvite();
+      discordInvite = await createDiscordInvite();
 
       // Check login state.
-      checkLoginState(discord_id, process.env.TELEGRAM);
+      checkLoginState(discordId, process.env.TELEGRAM);
     }
 
     // Save user to MongoDB
     const newUser = new userModel({
       address,
-      telegram_id,
-      telegram_invite,
-      discord_id,
-      discord_invite,
+      telegramId,
+      telegramInvite,
+      discordId,
+      discordInvite,
     });
 
     // Save user info.
@@ -80,12 +76,12 @@ router.post("/social", async (req, res) => {
 
     // Send invite code.
     let data = {
-      success: true,
-      invites: {
-        telegram_invite,
-        discord_invite,
-      },
+      twitterUrl: "null",
+      telegramUrl: telegramInvite,
+      discordUrl: discordInvite,
     };
+
+    console.log(data);
 
     res.json(data);
   } catch (error) {
